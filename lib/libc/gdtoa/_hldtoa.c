@@ -33,7 +33,7 @@ __FBSDID("$FreeBSD$");
 #include <stdint.h>
 
 #ifdef __i386__
-#include <ieeefp.h>
+#include <machine/ieeefp.h>
 #endif
 
 #include "../stdio/floatio.h"

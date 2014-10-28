@@ -199,7 +199,11 @@ atomic_fetchadd_long(volatile u_long *p, u_long v)
 
 	__asm __volatile(
 	"	" MPLOCKED "		"
+#if __LP64__
 	"	xaddq	%0,%1 ;		"
+#else
+	"	xaddl	%0,%1 ;		"
+#endif
 	"# atomic_fetchadd_long"
 	: "+r" (v),			/* 0 */
 	  "+m" (*p)			/* 1 */

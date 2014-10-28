@@ -126,7 +126,7 @@ __printf_render_str(struct __printf_io *io, const struct printf_info *pi, const 
 	int l;
 
 	if (pi->is_long || pi->spec == 'S') {
-		wcp = *((wint_t **)arg[0]);
+		wcp = *((wchar_t **)arg[0]);
 		if (wcp == NULL)
 			return (__printf_out(io, pi, "(null)", 6));
 		convbuf = __wcsconv(wcp, pi->prec);

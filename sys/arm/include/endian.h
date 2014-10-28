@@ -85,6 +85,11 @@ __bswap64(__uint64_t _x)
 static __inline __uint32_t
 __bswap32_var(__uint32_t v)
 {
+#if defined(__ARM_ARCH_7A__)
+    register __uint32_t _x = v;
+    __asm __volatile ("rev %0, %0" : "+l" (_x));
+    return _x;
+#else
 	__uint32_t t1;
 
 	__asm __volatile("eor %1, %0, %0, ror #16\n"
@@ -94,11 +99,17 @@ __bswap32_var(__uint32_t v)
 			 : "+r" (v), "=r" (t1));
 	
 	return (v);
+#endif
 }
 
 static __inline __uint16_t
 __bswap16_var(__uint16_t v)
 {
+#if defined(__ARM_ARCH_7A__)
+    register __uint16_t _x = v;
+    __asm __volatile ("rev16 %0, %0" : "+l" (_x));
+    return _x;
+#else
 	__uint32_t ret = v & 0xffff;
 
 	__asm __volatile(
@@ -108,6 +119,7 @@ __bswap16_var(__uint16_t v)
 	    : "+r" (ret));
 	
 	return ((__uint16_t)ret);
+#endif
 }		
 
 #ifdef __OPTIMIZE__

@@ -226,7 +226,7 @@ __inline_isnanl(__const long double __x)
  * expose the newer definition, assuming that the language spec takes
  * precedence over the operating system interface spec.
  */
-#if	__XSI_VISIBLE > 0 && __XSI_VISIBLE < 600 && __ISO_C_VISIBLE < 1999
+#if	(__XSI_VISIBLE > 0 && __XSI_VISIBLE < 600 && __ISO_C_VISIBLE < 1999) || defined(__cplusplus)
 #undef isinf
 #undef isnan
 int	isinf(double);
