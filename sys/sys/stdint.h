@@ -64,11 +64,13 @@ typedef	__uintmax_t		uintmax_t;
 #define	_UINTMAX_T_DECLARED
 #endif
 
+#ifndef __WORDSIZE
 /* GNU and Darwin define this and people seem to think it's portable */
 #if defined(UINTPTR_MAX) && defined(UINT64_MAX) && (UINTPTR_MAX == UINT64_MAX)
 #define	__WORDSIZE		64
 #else
 #define	__WORDSIZE		32
+#endif
 #endif
 
 /* Limits of wchar_t. */

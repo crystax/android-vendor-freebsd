@@ -202,7 +202,11 @@ _findshlib(char *name, int *majorp, int *minorp)
 		while ((dp = readdir(dd)) != NULL) {
 			int n;
 
+#if __ANDROID__
+            if ((int)strlen(dp->d_name) < len + 4)
+#else
 			if (dp->d_namlen < len + 4)
+#endif
 				continue;
 			if (strncmp(dp->d_name, lname, (size_t)len) != 0)
 				continue;

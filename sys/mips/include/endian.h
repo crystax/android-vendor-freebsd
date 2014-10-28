@@ -87,15 +87,29 @@ static __inline __uint16_t
 __bswap16_var(__uint16_t _x)
 {
 
+#if __mips_isa_rev == 2
+    register __uint16_t x = _x;
+    register __uint16_t r;
+    __asm volatile ("wsbh %0, %1" : "=r" (r) : "r" (x));
+    return r;
+#else
 	return ((_x >> 8) | ((_x << 8) & 0xff00));
+#endif
 }
 
 static __inline __uint32_t
 __bswap32_var(__uint32_t _x)
 {
 
+#if __mips_isa_rev == 2
+    register __uint32_t x = _x;
+    register __uint32_t r;
+    __asm volatile ("wsbh %0, %1; rotr %0, %0, 16" : "=r" (r) : "r" (x));
+    return r;
+#else
 	return ((_x >> 24) | ((_x >> 8) & 0xff00) | ((_x << 8) & 0xff0000) |
 	    ((_x << 24) & 0xff000000));
+#endif
 }
 
 static __inline __uint64_t

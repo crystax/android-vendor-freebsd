@@ -89,8 +89,11 @@ wint_t	nextwctype(wint_t, wctype_t);
 #endif
 
 #if __POSIX_VISIBLE >= 200809
+#ifndef __LIBCRYSTAX_XLOCALE__WCTYPE_H_INCLUDED
+#define __LIBCRYSTAX_XLOCALE__WCTYPE_H_INCLUDED
 #define _XLOCALE_WCTYPES 1
 #include <xlocale/_ctype.h>
+#endif
 #endif /* __POSIX_VISIBLE >= 200809 */
 __END_DECLS
 

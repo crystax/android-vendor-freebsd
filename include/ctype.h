@@ -80,7 +80,11 @@ int	isspecial(int);
 #endif
 
 #if __POSIX_VISIBLE >= 200809 || defined(_XLOCALE_H_)
+#ifndef __LIBCRYSTAX_XLOCALE__CTYPE_H_INCLUDED
+#define __LIBCRYSTAX_XLOCALE__CTYPE_H_INCLUDED
+#undef _XLOCALE_WCTYPES
 #include <xlocale/_ctype.h>
+#endif
 #endif
 __END_DECLS
 

@@ -190,7 +190,7 @@ char *strptime(const char * __restrict, const char * __restrict,
 #endif
 
 #if __BSD_VISIBLE
-char *timezone(int, int);	/* XXX XSI conflict */
+char *bsd_timezone(int, int);	/* XXX XSI conflict */
 void tzsetwall(void);
 time_t timelocal(struct tm * const);
 time_t timegm(struct tm * const);

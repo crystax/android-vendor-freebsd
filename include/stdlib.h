@@ -100,9 +100,7 @@ size_t	 mbstowcs(wchar_t * __restrict , const char * __restrict, size_t);
 int	 mbtowc(wchar_t * __restrict, const char * __restrict, size_t);
 void	 qsort(void *, size_t, size_t,
 	    int (*)(const void *, const void *));
-int	 rand(void);
 void	*realloc(void *, size_t);
-void	 srand(unsigned);
 double	 strtod(const char * __restrict, char ** __restrict);
 float	 strtof(const char * __restrict, char ** __restrict);
 long	 strtol(const char * __restrict, char ** __restrict, int);
@@ -216,7 +214,6 @@ long	 nrand48(unsigned short[3]);
 int	 posix_openpt(int);
 char	*ptsname(int);
 int	 putenv(char *);
-long	 random(void);
 unsigned short
 	*seed48(unsigned short[3]);
 #ifndef _SETKEY_DECLARED
@@ -225,7 +222,6 @@ int	 setkey(const char *);
 #endif
 char	*setstate(/* const */ char *);
 void	 srand48(long);
-void	 srandom(unsigned long);
 int	 unlockpt(int);
 #endif /* __XSI_VISIBLE */
 

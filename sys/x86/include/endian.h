@@ -92,7 +92,13 @@ static __inline __uint16_t
 __bswap16_var(__uint16_t _x)
 {
 
+#ifdef __GNUCLIKE_ASM
+    register __uint16_t x = _x;
+    __asm ("rorw $8, %w0" : "+r" (x));
+    return x;
+#else
 	return (__bswap16_gen(_x));
+#endif
 }
 
 static __inline __uint32_t
