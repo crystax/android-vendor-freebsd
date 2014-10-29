@@ -56,3 +56,7 @@ __isfinitel(long double e)
 	u.e = e;
 	return (u.bits.exp != 32767);
 }
+
+__weak_reference(__isfinite, finite);
+__weak_reference(__isfinitef, finitef);
+__weak_reference(__isfinitel, finitel);

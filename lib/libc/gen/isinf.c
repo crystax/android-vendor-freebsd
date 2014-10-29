@@ -36,6 +36,8 @@
  */
 
 __weak_reference(__isinf, isinf);
+__weak_reference(__isinff, isinff);
+__weak_reference(__isinfl, isinfl);
 
 int
 __isinf(double d)
