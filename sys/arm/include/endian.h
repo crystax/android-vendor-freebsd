@@ -89,6 +89,11 @@ __bswap32_var(__uint32_t v)
     register __uint32_t _x = v;
     __asm __volatile ("rev %0, %0" : "+l" (_x));
     return _x;
+#elif __thumb__
+    return ((v & 0xff000000U) >> 24) |
+           ((v & 0x00ff0000U) >>  8) |
+           ((v & 0x0000ff00U) <<  8) |
+           ((v & 0x000000ffU) << 24);
 #else
 	__uint32_t t1;
 
@@ -109,6 +114,8 @@ __bswap16_var(__uint16_t v)
     register __uint16_t _x = v;
     __asm __volatile ("rev16 %0, %0" : "+l" (_x));
     return _x;
+#elif __thumb__
+    return ((v & 0xff00) >> 8) | ((v & 0x00ff) << 8);
 #else
 	__uint32_t ret = v & 0xffff;
 
