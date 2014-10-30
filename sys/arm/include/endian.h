@@ -86,7 +86,7 @@ static __inline __uint32_t
 __bswap32_var(__uint32_t v)
 {
 #if defined(__ARM_ARCH_7A__)
-    register __uint32_t _x = v;
+    __uint32_t _x = v;
     __asm __volatile ("rev %0, %0" : "+l" (_x));
     return _x;
 #elif __thumb__
@@ -111,7 +111,7 @@ static __inline __uint16_t
 __bswap16_var(__uint16_t v)
 {
 #if defined(__ARM_ARCH_7A__)
-    register __uint16_t _x = v;
+    __uint16_t _x = v;
     __asm __volatile ("rev16 %0, %0" : "+l" (_x));
     return _x;
 #elif __thumb__
