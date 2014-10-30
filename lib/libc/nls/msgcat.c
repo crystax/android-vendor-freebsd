@@ -62,18 +62,18 @@ __FBSDID("$FreeBSD$");
 
 #define RLOCK(fail)	{ int ret;						\
 			  if (__isthreaded &&					\
-			      ((ret = _pthread_rwlock_rdlock(&rwlock)) != 0)) {	\
+                  ((ret = pthread_mutex_lock(&lock)) != 0)) { \
 				  errno = ret;					\
 				  return (fail);				\
 			  }}
 #define WLOCK(fail)	{ int ret;						\
 			  if (__isthreaded &&					\
-			      ((ret = _pthread_rwlock_wrlock(&rwlock)) != 0)) {	\
+                  ((ret = pthread_mutex_lock(&lock)) != 0)) { \
 				  errno = ret;					\
 				  return (fail);				\
 			  }}
 #define UNLOCK		{ if (__isthreaded)					\
-			      _pthread_rwlock_unlock(&rwlock); }
+                  pthread_mutex_unlock(&lock); }
 
 #define	NLERR		((nl_catd) -1)
 #define NLRETERR(errc)  { errno = errc; return (NLERR); }
@@ -95,7 +95,7 @@ __FBSDID("$FreeBSD$");
 
 static nl_catd load_msgcat(const char *, const char *, const char *);
 
-static pthread_rwlock_t		 rwlock = PTHREAD_RWLOCK_INITIALIZER;
+static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 struct catentry {
 	SLIST_ENTRY(catentry)	 list;
