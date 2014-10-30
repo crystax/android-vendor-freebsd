@@ -277,13 +277,14 @@ int	 vsprintf(char * __restrict, const char * __restrict,
 
 #if __ISO_C_VISIBLE >= 1999
 int	 snprintf(char * __restrict, size_t, const char * __restrict,
-	    ...) __printflike(3, 4);
+	    ...) __nothrow __printflike(3, 4);
 int	 vfscanf(FILE * __restrict, const char * __restrict, __va_list)
 	    __scanflike(2, 0);
 int	 vscanf(const char * __restrict, __va_list) __scanflike(1, 0);
 int	 vsnprintf(char * __restrict, size_t, const char * __restrict,
-	    __va_list) __printflike(3, 0);
+	    __va_list) __nothrow __printflike(3, 0);
 int	 vsscanf(const char * __restrict, const char * __restrict, __va_list)
+        __nothrow
 	    __scanflike(2, 0);
 #endif
 
