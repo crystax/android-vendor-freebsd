@@ -132,7 +132,7 @@ typedef struct {
 
 /* LONGLONG */
 long long
-	 atoll(const char *);
+	 atoll(const char *) __nothrow;
 /* LONGLONG */
 long long
 	 llabs(long long) __pure2;
@@ -140,13 +140,13 @@ long long
 lldiv_t	 lldiv(long long, long long) __pure2;
 /* LONGLONG */
 long long
-	 strtoll(const char * __restrict, char ** __restrict, int);
+	 strtoll(const char * __restrict, char ** __restrict, int) __nothrow;
 /* LONGLONG */
 unsigned long long
-	 strtoull(const char * __restrict, char ** __restrict, int);
+	 strtoull(const char * __restrict, char ** __restrict, int) __nothrow;
 #endif /* __LONG_LONG_SUPPORTED */
 
-_Noreturn void	 _Exit(int);
+_Noreturn void	 _Exit(int) __nothrow;
 #endif /* __ISO_C_VISIBLE >= 1999 */
 
 /*

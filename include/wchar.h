@@ -187,14 +187,14 @@ int	vswscanf(const wchar_t * __restrict, const wchar_t * __restrict,
 int	vwscanf(const wchar_t * __restrict, __va_list);
 float	wcstof(const wchar_t * __restrict, wchar_t ** __restrict);
 long double
-	wcstold(const wchar_t * __restrict, wchar_t ** __restrict);
+	wcstold(const wchar_t * __restrict, wchar_t ** __restrict) __nothrow;
 #ifdef __LONG_LONG_SUPPORTED
 /* LONGLONG */
 long long
-	wcstoll(const wchar_t * __restrict, wchar_t ** __restrict, int);
+	wcstoll(const wchar_t * __restrict, wchar_t ** __restrict, int) __nothrow;
 /* LONGLONG */
 unsigned long long
-	 wcstoull(const wchar_t * __restrict, wchar_t ** __restrict, int);
+	 wcstoull(const wchar_t * __restrict, wchar_t ** __restrict, int) __nothrow;
 #endif
 #endif	/* __ISO_C_VISIBLE >= 1999 */
 
