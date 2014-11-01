@@ -139,8 +139,13 @@ struct __sFILE {
 	int	_blksize;	/* stat.st_blksize (may be != _bf._size) */
 	fpos_t	_offset;	/* current lseek offset */
 
+#if __ANDROID__
+    __pthread_mutex_t _fl_mutex;
+    __pthread_t _fl_owner;
+#else
 	struct pthread_mutex *_fl_mutex;	/* used for MT-safety */
 	struct pthread *_fl_owner;	/* current owner */
+#endif
 	int	_fl_count;	/* recursive lock count */
 	int	_orientation;	/* orientation for fwide() */
 	__mbstate_t _mbstate;	/* multibyte conversion state */
