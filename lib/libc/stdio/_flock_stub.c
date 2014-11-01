@@ -129,7 +129,11 @@ _funlockfile(FILE *fp)
 			 * lock now:
 			 */
 			fp->_fl_count = 0;
+#if __ANDROID__
+            fp->_fl_owner = 0;
+#else
 			fp->_fl_owner = NULL;
+#endif
 			_pthread_mutex_unlock(&fp->_fl_mutex);
 		}
 	}
