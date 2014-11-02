@@ -93,7 +93,7 @@ __bswap16_var(__uint16_t _x)
 {
 
 #ifdef __GNUCLIKE_ASM
-    register __uint16_t x = _x;
+    __uint16_t x = _x;
     __asm ("rorw $8, %w0" : "+r" (x));
     return x;
 #else
