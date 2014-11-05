@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#ifndef lint
-static char rcsid[] = "$FreeBSD$";
-#endif
-
 /*
  * scalbn (double x, int n)
  * scalbn(x,n) returns x* 2**n  computed by  exponent

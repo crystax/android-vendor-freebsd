@@ -10,10 +10,6 @@
  * ====================================================
  */
 
-#ifndef lint
-static char rcsid[] = "$FreeBSD$";
-#endif
-
 /*
  * fabs(x) returns the absolute value of x.
  */
