@@ -52,6 +52,10 @@ __FBSDID("$FreeBSD$");
 #include "mblocal.h"
 #include "setlocale.h"
 
+#if __ANDROID__
+#include <crystax/localeimpl.h>
+#endif
+
 #undef _CurrentRuneLocale
 extern _RuneLocale const *_CurrentRuneLocale;
 #ifndef __NO_TLS
@@ -63,7 +67,11 @@ _Thread_local const _RuneLocale *_ThreadRuneLocale;
 
 extern int __mb_sb_limit;
 
+#if __ANDROID__
+extern _RuneLocale *_Read_RuneMagi(const void *buf, size_t bufsize);
+#else
 extern _RuneLocale	*_Read_RuneMagi(FILE *);
+#endif
 
 static int		__setrunelocale(struct xlocale_ctype *l, const char *);
 
@@ -71,6 +79,14 @@ static int		__setrunelocale(struct xlocale_ctype *l, const char *);
 #define __collate_substitute_table_ptr (table->__collate_substitute_table_ptr)
 #define __collate_char_pri_table_ptr (table->__collate_char_pri_table_ptr)
 #define __collate_chain_pri_table (table->__collate_chain_pri_table)
+
+
+#if __ANDROID__
+#define fclose(x) __crystax_locale_setrunelocale()
+
+static void __crystax_locale_setrunelocale()
+{}
+#endif /* __ANDROID__ */
 
 
 static void
@@ -108,11 +124,16 @@ free_runes(_RuneLocale *rl)
 static int
 __setrunelocale(struct xlocale_ctype *l, const char *encoding)
 {
-	FILE *fp;
-	char name[PATH_MAX];
 	_RuneLocale *rl;
 	int saverr, ret;
 	struct xlocale_ctype saved = *l;
+#if __ANDROID__
+    void *clbuf;
+    size_t clbufsize;
+#else
+    FILE *fp;
+    char name[PATH_MAX];
+#endif
 
 	/*
 	 * The "C" and "POSIX" locale are always here.
@@ -123,6 +144,10 @@ __setrunelocale(struct xlocale_ctype *l, const char *encoding)
 		return (0);
 	}
 
+#if __ANDROID__
+    if (__crystax_locale_load(encoding, LC_CTYPE, &clbuf, &clbufsize) != 0)
+        return errno;
+#else
 	/* Range checking not needed, encoding length already checked before */
 	(void) strcpy(name, _PathLocale);
 	(void) strcat(name, "/");
@@ -131,8 +156,13 @@ __setrunelocale(struct xlocale_ctype *l, const char *encoding)
 
 	if ((fp = fopen(name, "re")) == NULL)
 		return (errno == 0 ? ENOENT : errno);
+#endif
 
+#if __ANDROID__
+    if ((rl = _Read_RuneMagi(clbuf, clbufsize)) == NULL) {
+#else
 	if ((rl = _Read_RuneMagi(fp)) == NULL) {
+#endif
 		saverr = (errno == 0 ? EFTYPE : errno);
 		(void)fclose(fp);
 		return (saverr);

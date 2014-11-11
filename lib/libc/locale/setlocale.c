@@ -309,6 +309,16 @@ __get_locale_env(category)
 	return (env);
 }
 
+#if __ANDROID__
+extern int __crystax_locale_init();
+
+int __detect_path_locale(void)
+{
+    if (__crystax_locale_init() != 0)
+        return errno;
+    return 0;
+}
+#else /* !__ANDROID__ */
 /*
  * Detect locale storage location and store its value to _PathLocale variable
  */
@@ -330,4 +340,5 @@ __detect_path_locale(void)
 	}
 	return (0);
 }
+#endif /* !__ANDROID__ */
 

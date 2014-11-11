@@ -49,10 +49,12 @@ __FBSDID("$FreeBSD$");
 
 #include "runefile.h"
 
-_RuneLocale *_Read_RuneMagi(FILE *);
-
 _RuneLocale *
+#if __ANDROID__
+_Read_RuneMagi(const void *buf, size_t bufsize)
+#else
 _Read_RuneMagi(FILE *fp)
+#endif
 {
 	char *fdata, *data;
 	void *lastp;
@@ -68,8 +70,12 @@ _Read_RuneMagi(FILE *fp)
 	_FileRuneEntry *mapupper_ext_ranges;
 	int runetype_ext_len = 0;
 
+#if __ANDROID__
+    sb.st_size = bufsize;
+#else
 	if (_fstat(fileno(fp), &sb) < 0)
 		return (NULL);
+#endif
 
 	if ((size_t)sb.st_size < sizeof(_FileRuneLocale)) {
 		errno = EFTYPE;
@@ -79,6 +85,9 @@ _Read_RuneMagi(FILE *fp)
 	if ((fdata = malloc(sb.st_size)) == NULL)
 		return (NULL);
 
+#if __ANDROID__
+    memmove(fdata, buf, bufsize);
+#else
 	errno = 0;
 	rewind(fp); /* Someone might have read the magic number once already */
 	if (errno) {
@@ -94,6 +103,7 @@ _Read_RuneMagi(FILE *fp)
 		errno = saverr;
 		return (NULL);
 	}
+#endif
 
 	frl = (_FileRuneLocale *)fdata;
 	lastp = fdata + sb.st_size;

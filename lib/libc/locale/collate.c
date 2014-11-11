@@ -49,6 +49,10 @@ __FBSDID("$FreeBSD$");
 
 #include "libc_private.h"
 
+#if __ANDROID__
+#include <crystax/localeimpl.h>
+#endif
+
 /*
  * To avoid modifying the original (single-threaded) code too much, we'll just
  * define the old globals as fields inside the table.
@@ -75,6 +79,29 @@ void __collate_err(int ex, const char *f) __dead2;
 
 int
 __collate_load_tables_l(const char *encoding, struct xlocale_collate *table);
+
+#if __ANDROID__
+
+#define fclose(x) __crystax_locale_collate_close()
+#define fread(buf, sz, n, fp) __crystax_locale_collate_read(buf, sz*n, clbuf, clbufsize, &clpos)
+
+static void __crystax_locale_collate_close()
+{}
+
+static size_t __crystax_locale_collate_read(void *buf, size_t size,
+        void const *clbuf, size_t clbufsize, size_t *clpos)
+{
+    if (*clpos + size > clbufsize)
+    {
+        errno = EFTYPE;
+        return 0;
+    }
+    memmove(buf, clbuf + *clpos, size);
+    *clpos += size;
+    return size;
+}
+
+#endif /* __ANDROID__ */
 
 static void
 destruct_collate(void *t)
@@ -117,11 +144,18 @@ __collate_load_tables(const char *encoding)
 int
 __collate_load_tables_l(const char *encoding, struct xlocale_collate *table)
 {
-	FILE *fp;
 	int i, saverr, chains;
 	uint32_t u32;
-	char strbuf[STR_LEN], buf[PATH_MAX];
+	char strbuf[STR_LEN];
 	void *TMP_substitute_table, *TMP_char_pri_table, *TMP_chain_pri_table;
+#if __ANDROID__
+    void *clbuf;
+    size_t clbufsize;
+    size_t clpos = 0;
+#else
+    FILE *fp;
+    char buf[PATH_MAX];
+#endif
 
 	/* 'encoding' must be already checked. */
 	if (strcmp(encoding, "C") == 0 || strcmp(encoding, "POSIX") == 0) {
@@ -129,6 +163,10 @@ __collate_load_tables_l(const char *encoding, struct xlocale_collate *table)
 		return (_LDP_CACHE);
 	}
 
+#if __ANDROID__
+    if (__crystax_locale_load(encoding, LC_COLLATE, &clbuf, &clbufsize) != 0)
+        return (_LDP_ERROR);
+#else
 	/* 'PathLocale' must be already set & checked. */
 	/* Range checking not needed, encoding has fixed size */
 	(void)strcpy(buf, _PathLocale);
@@ -137,6 +175,7 @@ __collate_load_tables_l(const char *encoding, struct xlocale_collate *table)
 	(void)strcat(buf, "/LC_COLLATE");
 	if ((fp = fopen(buf, "re")) == NULL)
 		return (_LDP_ERROR);
+#endif
 
 	if (fread(strbuf, sizeof(strbuf), 1, fp) != 1) {
 		saverr = errno;

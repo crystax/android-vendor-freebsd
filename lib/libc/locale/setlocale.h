@@ -32,7 +32,9 @@
 #define ENCODING_LEN 31
 #define CATEGORY_LEN 11
 
+#if !__ANDROID__
 extern char *_PathLocale;
+#endif
 
 int	__detect_path_locale(void);
 int	__wrap_setrunelocale(const char *);
