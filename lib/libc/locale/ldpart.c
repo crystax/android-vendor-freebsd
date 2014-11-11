@@ -42,6 +42,19 @@ __FBSDID("$FreeBSD$");
 #include "ldpart.h"
 #include "setlocale.h"
 
+#if __ANDROID__
+#include <crystax/localeimpl.h>
+#endif
+
+#if __ANDROID__
+
+#define close(x) __crystax_locale_part_load_close()
+
+static void __crystax_locale_part_load_close()
+{}
+
+#endif /* __ANDROID__ */
+
 static int split_lines(char *, const char *);
 
 int
@@ -53,12 +66,18 @@ __part_load_locale(const char *name,
 		int locale_buf_size_min,
 		const char **dst_localebuf)
 {
-	int		saverr, fd, i, num_lines;
+	int		saverr, i, num_lines;
 	char		*lbuf, *p;
 	const char	*plim;
-	char		filename[PATH_MAX];
 	struct stat	st;
 	size_t		namesize, bufsize;
+#if __ANDROID__
+    void *clbuf;
+    size_t clbufsize;
+#else
+    int fd;
+    char filename[PATH_MAX];
+#endif
 
 	/* 'name' must be already checked. */
 	if (strcmp(name, "C") == 0 || strcmp(name, "POSIX") == 0) {
@@ -79,6 +98,11 @@ __part_load_locale(const char *name,
 	 */
 	namesize = strlen(name) + 1;
 
+#if __ANDROID__
+    if ((__crystax_locale_loads(name, category_filename, &clbuf, &clbufsize)) != 0)
+        goto bad_locale;
+    st.st_size = clbufsize;
+#else
 	/* 'PathLocale' must be already set & checked. */
 
 	/* Range checking not needed, 'name' size is limited */
@@ -91,6 +115,7 @@ __part_load_locale(const char *name,
 		return (_LDP_ERROR);
 	if (_fstat(fd, &st) != 0)
 		goto bad_locale;
+#endif
 	if (st.st_size <= 0) {
 		errno = EFTYPE;
 		goto bad_locale;
@@ -103,8 +128,12 @@ __part_load_locale(const char *name,
 	(void)strcpy(lbuf, name);
 	p = lbuf + namesize;
 	plim = p + st.st_size;
+#if __ANDROID__
+    memmove(p, clbuf, clbufsize);
+#else
 	if (_read(fd, p, (size_t) st.st_size) != st.st_size)
 		goto bad_lbuf;
+#endif
 	/*
 	 * Parse the locale file into localebuf.
 	 */
