@@ -72,6 +72,11 @@
 #define __htons(x)        (__bswap16(x))
 #endif /* __ARMEB__ */
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 static __inline __uint64_t
 __bswap64(__uint64_t _x)
 {
@@ -86,7 +91,7 @@ static __inline __uint32_t
 __bswap32_var(__uint32_t v)
 {
 #if defined(__ARM_ARCH_7A__)
-    __uint32_t _x = v;
+    register __uint32_t _x = v;
     __asm __volatile ("rev %0, %0" : "+l" (_x));
     return _x;
 #elif __thumb__
@@ -111,7 +116,7 @@ static __inline __uint16_t
 __bswap16_var(__uint16_t v)
 {
 #if defined(__ARM_ARCH_7A__)
-    __uint16_t _x = v;
+    register __uint16_t _x = v;
     __asm __volatile ("rev16 %0, %0" : "+l" (_x));
     return _x;
 #elif __thumb__
@@ -128,6 +133,10 @@ __bswap16_var(__uint16_t v)
 	return ((__uint16_t)ret);
 #endif
 }		
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 #ifdef __OPTIMIZE__
 

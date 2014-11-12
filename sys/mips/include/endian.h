@@ -83,6 +83,11 @@ extern "C" {
 	(((x) << 24) & ((__uint64_t)0xff << 40)) |			\
 	(((x) << 40) & ((__uint64_t)0xff << 48)) | (((x) << 56)))
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 static __inline __uint16_t
 __bswap16_var(__uint16_t _x)
 {
@@ -121,6 +126,10 @@ __bswap64_var(__uint64_t _x)
 	    ((_x << 24) & ((__uint64_t)0xff << 40)) |
 	    ((_x << 40) & ((__uint64_t)0xff << 48)) | ((_x << 56)));
 }
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 #define	__bswap16(x)	((__uint16_t)(__is_constant((x)) ?		\
 	__bswap16_const((__uint16_t)(x)) :  __bswap16_var((__uint16_t)(x))))

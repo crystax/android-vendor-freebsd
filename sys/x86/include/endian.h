@@ -88,12 +88,17 @@
 
 /* These are defined as functions to avoid multiple evaluation of x. */
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 static __inline __uint16_t
 __bswap16_var(__uint16_t _x)
 {
 
 #ifdef __GNUCLIKE_ASM
-    __uint16_t x = _x;
+    register __uint16_t x = _x;
     __asm ("rorw $8, %w0" : "+r" (x));
     return x;
 #else
@@ -128,6 +133,10 @@ __bswap64_var(__uint64_t _x)
 	return (__bswap64_gen(_x));
 #endif
 }
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 #define	__htonl(x)	__bswap32(x)
 #define	__htons(x)	__bswap16(x)
