@@ -30,6 +30,13 @@
 
 #include "fpmath.h"
 
+/* Workaround to enable isnan implementation here for libcrystax */
+#if __CRYSTAX__
+#ifdef PIC
+#undef PIC
+#endif
+#endif
+
 /* Provided by libc.so */
 #ifndef PIC
 #undef isnan
