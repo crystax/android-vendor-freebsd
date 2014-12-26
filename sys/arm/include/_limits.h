@@ -70,8 +70,13 @@
 
 #define	__SIZE_T_MAX	__UINT_MAX	/* max value for a size_t */
 
+#if __ANDROID__
+#define __OFF_MAX __LONG_MAX
+#define __OFF_MIN __LONG_MIN
+#else
 #define	__OFF_MAX	__LLONG_MAX	/* max value for a off_t */
 #define	__OFF_MIN	__LLONG_MIN	/* min value for a off_t */
+#endif
 
 /* Quads and long longs are the same size.  Ensure they stay in sync. */
 #define	__UQUAD_MAX	__ULLONG_MAX	/* max value for a uquad_t */
