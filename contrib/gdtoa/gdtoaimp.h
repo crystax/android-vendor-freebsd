@@ -636,6 +636,7 @@ extern void memcpy_D2A ANSI((void*, const void*, size_t));
  extern Bigint *set_ones ANSI((Bigint*, int));
  extern char *strcp ANSI((char*, const char*));
  extern int strtodg_l ANSI((CONST char*, char**, FPI*, Long*, ULong*, locale_t));
+ extern int strtodg ANSI((CONST char*, char**, FPI*, Long*, ULong*));
 
  extern int strtoId ANSI((CONST char *, char **, double *, double *));
  extern int strtoIdd ANSI((CONST char *, char **, double *, double *));
