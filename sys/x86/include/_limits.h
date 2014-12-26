@@ -85,8 +85,13 @@
 #else
 #define	__SSIZE_MAX	__INT_MAX
 #define	__SIZE_T_MAX	__UINT_MAX
+#if __ANDROID__
+#define __OFF_MAX __LONG_MAX
+#define __OFF_MIN __LONG_MIN
+#else
 #define	__OFF_MAX	__LLONG_MAX
 #define	__OFF_MIN	__LLONG_MIN
+#endif
 #define	__UQUAD_MAX	__ULLONG_MAX
 #define	__QUAD_MAX	__LLONG_MAX
 #define	__QUAD_MIN	__LLONG_MIN
