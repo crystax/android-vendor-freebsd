@@ -1063,3 +1063,15 @@ strtodg_l
 		}
 	return irv;
 	}
+
+ int
+strtodg
+#ifdef KR_headers
+	(s00, se, fpi, exp, bits)
+	CONST char *s00; char **se; FPI *fpi; Long *exp; ULong *bits;
+#else
+	(CONST char *s00, char **se, FPI *fpi, Long *exp, ULong *bits)
+#endif
+{
+	return strtodg_l(s00, se, fpi, exp, bits, __get_locale());
+}
