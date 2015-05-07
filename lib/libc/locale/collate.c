@@ -83,22 +83,22 @@ __collate_load_tables_l(const char *encoding, struct xlocale_collate *table);
 #if __ANDROID__
 
 #define fclose(x) __crystax_locale_collate_close()
-#define fread(buf, sz, n, fp) __crystax_locale_collate_read(buf, sz*n, clbuf, clbufsize, &clpos)
+#define fread(buf, sz, n, fp) __crystax_locale_collate_read(buf, sz, n, clbuf, clbufsize, &clpos)
 
 static void __crystax_locale_collate_close()
 {}
 
-static size_t __crystax_locale_collate_read(void *buf, size_t size,
+static size_t __crystax_locale_collate_read(void *buf, size_t size, size_t count,
         void const *clbuf, size_t clbufsize, size_t *clpos)
 {
-    if (*clpos + size > clbufsize)
+    if (*clpos + size*count > clbufsize)
     {
         errno = EFTYPE;
         return 0;
     }
-    memmove(buf, clbuf + *clpos, size);
-    *clpos += size;
-    return size;
+    memmove(buf, (const char *)clbuf + *clpos, size*count);
+    *clpos += size*count;
+    return count;
 }
 
 #endif /* __ANDROID__ */
