@@ -67,6 +67,8 @@ __FBSDID("$FreeBSD$");
 #endif
 #include "un-namespace.h"
 
+#include <endian.h>
+
 #include <db.h>
 #include "hash.h"
 #include "page.h"
