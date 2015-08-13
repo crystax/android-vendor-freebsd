@@ -45,6 +45,11 @@ __FBSDID("$FreeBSD$");
 #include <unistd.h>
 #include "un-namespace.h"
 
+#if defined(__ANDROID__)
+#define O_SHLOCK 0
+#define O_EXLOCK 0
+#endif
+
 char *_mktemp(char *);
 
 static int _gettemp(char *, int *, int, int, int);
@@ -187,7 +192,7 @@ _gettemp(char *path, int *doopen, int domkdir, int slen, int oflags)
 			/* have we tried all possible permutations? */
 			if (trv == suffp)
 				return (0); /* yes - exit with EEXIST */
-			pad = strchr(padchar, *trv);
+			pad = strchr((const char *)padchar, *trv);
 			if (pad == NULL) {
 				/* this should never happen */
 				errno = EIO;
