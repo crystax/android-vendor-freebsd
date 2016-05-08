@@ -57,9 +57,13 @@ __sleep(unsigned int seconds)
 
 	time_to_sleep.tv_sec = seconds;
 	time_to_sleep.tv_nsec = 0;
+#if __ANDROID__
+	if (nanosleep(&time_to_sleep, &time_remaining) != -1)
+#else
 	if (((int (*)(const struct timespec *, struct timespec *))
 	    __libc_interposing[INTERPOS_nanosleep])(
 	    &time_to_sleep, &time_remaining) != -1)
+#endif
 		return (0);
 	if (errno != EINTR)
 		return (seconds);		/* best guess */
