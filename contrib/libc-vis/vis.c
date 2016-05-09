@@ -61,7 +61,9 @@ __RCSID("$NetBSD: vis.c,v 1.62 2014/09/08 17:35:01 christos Exp $");
 #endif /* LIBC_SCCS and not lint */
 #ifdef __FBSDID
 __FBSDID("$FreeBSD$");
+#ifndef _DIAGASSERT
 #define	_DIAGASSERT(x)	assert(x)
+#endif
 #endif
 
 #include "namespace.h"
