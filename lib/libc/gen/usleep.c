@@ -47,8 +47,12 @@ __usleep(useconds_t useconds)
 
 	time_to_sleep.tv_nsec = (useconds % 1000000) * 1000;
 	time_to_sleep.tv_sec = useconds / 1000000;
+#if __ANDROID__
+	return nanosleep(&time_to_sleep, NULL);
+#else
 	return (((int (*)(const struct timespec *, struct timespec *))
 	    __libc_interposing[INTERPOS_nanosleep])(&time_to_sleep, NULL));
+#endif
 }
 
 __weak_reference(__usleep, usleep);
