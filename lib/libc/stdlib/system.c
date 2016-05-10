@@ -46,6 +46,10 @@ __FBSDID("$FreeBSD$");
 #include "un-namespace.h"
 #include "libc_private.h"
 
+#if __ANDROID__
+#define __libc_system system
+#else /* !__ANDROID__*/
+
 #pragma weak system
 int
 system(const char *command)
@@ -54,6 +58,8 @@ system(const char *command)
 	return (((int (*)(const char *))
 	    __libc_interposing[INTERPOS_system])(command));
 }
+
+#endif /* !__ANDROID__ */
 
 int
 __libc_system(const char *command)
