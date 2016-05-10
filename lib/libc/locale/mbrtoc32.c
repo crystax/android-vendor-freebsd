@@ -31,6 +31,8 @@ __FBSDID("$FreeBSD$");
 #include <wchar.h>
 #include "xlocale_private.h"
 
+typedef int (*static_assert_type)[(sizeof(wchar_t) == sizeof(char32_t)) ? 1 : -1];
+
 size_t
 mbrtoc32_l(char32_t * __restrict pc32, const char * __restrict s, size_t n,
     mbstate_t * __restrict ps, locale_t locale)
@@ -41,7 +43,7 @@ mbrtoc32_l(char32_t * __restrict pc32, const char * __restrict s, size_t n,
 		ps = &locale->mbrtoc32;
 
 	/* Assume wchar_t uses UTF-32. */
-	return (mbrtowc_l(pc32, s, n, ps, locale));
+	return (mbrtowc_l((wchar_t*)pc32, s, n, ps, locale));
 }
 
 size_t

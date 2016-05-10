@@ -181,7 +181,17 @@ char	*mkdtemp(char *);
 #endif
 #ifndef _MKSTEMP_DECLARED
 int	 mkstemp(char *);
+#if __ANDROID__
+int mkstemp64(char*);
+#endif /* __ANDROID__ */
 #define	_MKSTEMP_DECLARED
+#endif
+#ifndef _MKSTEMPS_DECLARED
+int mkstemps(char *path, int slen);
+#if __ANDROID__
+int mkstemps64(char*, int);
+#endif /* __ANDROID__ */
+#define _MKSTEMPS_DECLARED
 #endif
 #endif /* __POSIX_VISIBLE >= 200809 || __XSI_VISIBLE */
 
@@ -279,7 +289,13 @@ int	 heapsort(void *, size_t, size_t, int (*)(const void *, const void *));
 int	 l64a_r(long, char *, int);
 int	 mergesort(void *, size_t, size_t, int (*)(const void *, const void *));
 int	 mkostemp(char *, int);
+#if __ANDROID__
+int	 mkostemp64(char *, int);
+#endif
 int	 mkostemps(char *, int, int);
+#if __ANDROID__
+int	 mkostemps64(char *, int, int);
+#endif
 void	 qsort_r(void *, size_t, size_t, void *,
 	    int (*)(void *, const void *, const void *));
 int	 radixsort(const unsigned char **, int, const unsigned char *,

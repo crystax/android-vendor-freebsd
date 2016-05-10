@@ -42,6 +42,9 @@ __FBSDID("$FreeBSD$");
 #include <sys/param.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
+#if __ANDROID__
+#include <sys/vfs.h>
+#endif
 
 #include <dirent.h>
 #include <errno.h>
@@ -53,6 +56,10 @@ __FBSDID("$FreeBSD$");
 #include "un-namespace.h"
 
 #include "gen-private.h"
+
+#if __ANDROID__
+#undef FTS_WHITEOUT
+#endif
 
 static FTSENT	*fts_alloc(FTS *, char *, size_t);
 static FTSENT	*fts_build(FTS *, int);
@@ -100,6 +107,7 @@ struct _fts_private {
  * links and directories this way, so we must punt for others.
  */
 
+#if !__ANDROID__
 static const char *ufslike_filesystems[] = {
 	"ufs",
 	"zfs",
@@ -108,6 +116,7 @@ static const char *ufslike_filesystems[] = {
 	"ext2fs",
 	0
 };
+#endif /* !__ANDROID__ */
 
 FTS *
 fts_open(argv, options, compar)
@@ -502,6 +511,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 int
 fts_set(FTS *sp, FTSENT *p, int instr)
 {
+	(void)sp;
 	if (instr != 0 && instr != FTS_AGAIN && instr != FTS_FOLLOW &&
 	    instr != FTS_NOINSTR && instr != FTS_SKIP) {
 		errno = EINVAL;
@@ -630,10 +640,13 @@ fts_build(FTS *sp, int type)
 	DIR *dirp;
 	void *oldaddr;
 	char *cp;
-	int cderrno, descend, oflag, saved_errno, nostat, doadjust;
+	int cderrno, descend, saved_errno, nostat, doadjust;
 	long level;
 	long nlinks;	/* has to be signed because -1 is a magic value */
 	size_t dnamlen, len, maxlen, nitems;
+#ifdef FTS_WHITEOUT
+	int oflag;
+#endif
 
 	/* Set current node pointer. */
 	cur = sp->fts_cur;
@@ -737,7 +750,11 @@ fts_build(FTS *sp, int type)
 	/* Read the directory, attaching each entry to the `link' pointer. */
 	doadjust = 0;
 	for (head = tail = NULL, nitems = 0; dirp && (dp = readdir(dirp));) {
+#if __ANDROID__
+		dnamlen = strlen(dp->d_name);
+#else
 		dnamlen = dp->d_namlen;
+#endif
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
@@ -1154,6 +1171,11 @@ bail:
 static int
 fts_ufslinks(FTS *sp, const FTSENT *ent)
 {
+#if __ANDROID__
+	(void)sp;
+	(void)ent;
+	return 1;
+#else /* !__ANDROID__ */
 	struct _fts_private *priv;
 	const char **cpp;
 
@@ -1180,4 +1202,5 @@ fts_ufslinks(FTS *sp, const FTSENT *ent)
 		}
 	}
 	return (priv->ftsp_linksreliable);
+#endif /* !__ANDROID__ */
 }

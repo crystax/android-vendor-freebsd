@@ -168,6 +168,9 @@ static int never = 0;		/* for use in asserts; shuts lint up */
 #endif
 
 /* Macro used by computejump()/computematchjump() */
+#ifdef MIN
+#undef MIN
+#endif
 #define MIN(a,b)	((a)<(b)?(a):(b))
 
 /*

@@ -59,6 +59,8 @@ __FBSDID("$FreeBSD$");
 #include "utils.h"
 #include "regex2.h"
 
+#define __INSIDE_REGEXEC_C 1
+
 static int nope __unused = 0;	/* for use in asserts; shuts lint up */
 
 static __inline size_t

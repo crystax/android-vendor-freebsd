@@ -33,6 +33,8 @@
  *	@(#)engine.c	8.5 (Berkeley) 3/20/94
  */
 
+#if __INSIDE_REGEXEC_C
+
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
@@ -1184,3 +1186,5 @@ pchar(int ch)
 #undef	print
 #undef	at
 #undef	match
+
+#endif /* __INSIDE_REGEXEC_C */

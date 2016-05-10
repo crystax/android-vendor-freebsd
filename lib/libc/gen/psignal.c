@@ -45,7 +45,7 @@ __FBSDID("$FreeBSD$");
 
 void
 psignal(sig, s)
-	unsigned int sig;
+	int sig;
 	const char *s;
 {
 	const char *c;

@@ -279,6 +279,7 @@ srandom(unsigned long x)
 		(void)random();
 }
 
+#if !__ANDROID__
 /*
  * srandomdev:
  *
@@ -311,6 +312,7 @@ srandomdev(void)
 		rptr = &state[0];
 	}
 }
+#endif /* !__ANDROID__ */
 
 /*
  * initstate:

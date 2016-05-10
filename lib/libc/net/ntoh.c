@@ -29,6 +29,7 @@ __FBSDID("$FreeBSD$");
 
 #include <sys/endian.h>
 
+#undef htonl
 uint32_t
 htonl(uint32_t hl)
 {
@@ -36,6 +37,7 @@ htonl(uint32_t hl)
 	return (__htonl(hl));
 }
 
+#undef htons
 uint16_t
 htons(uint16_t hs)
 {
@@ -43,6 +45,7 @@ htons(uint16_t hs)
 	return (__htons(hs));
 }
 
+#undef ntohl
 uint32_t
 ntohl(uint32_t nl)
 {
@@ -50,6 +53,7 @@ ntohl(uint32_t nl)
 	return (__ntohl(nl));
 }
 
+#undef ntohs
 uint16_t
 ntohs(uint16_t ns)
 {

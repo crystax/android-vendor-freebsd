@@ -61,6 +61,11 @@ void	*tfind(const void *, void * const *,
 	    int (*)(const void *, const void *));
 void	*tsearch(const void *, void **, int (*)(const void *, const void *));
 void	 twalk(const void *, void (*)(const void *, VISIT, int));
+
+#if __ANDROID__
+void tdestroy(void*, void (*)(void*));
+#endif /* !__ANDROID__ */
+
 __END_DECLS
 
 #endif /* !_SEARCH_H_ */

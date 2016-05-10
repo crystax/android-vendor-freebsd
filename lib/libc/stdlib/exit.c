@@ -52,6 +52,10 @@ void (*__cleanup)(void);
  */
 int	__isthreaded	= 0;
 
+#if __ANDROID__
+extern void __cxa_thread_finalize();
+#endif
+
 /*
  * Exit, flushing stdio buffers if necessary.
  */
@@ -59,10 +63,14 @@ void
 exit(status)
 	int status;
 {
+#if __ANDROID__
+	__cxa_thread_finalize();
+#else /* !__ANDROID__ */
 	/* Ensure that the auto-initialization routine is linked in: */
 	extern int _thread_autoinit_dummy_decl;
 
 	_thread_autoinit_dummy_decl = 1;
+#endif /* !__ANDROID__ */
 
 	__cxa_finalize(NULL);
 	if (__cleanup)

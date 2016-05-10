@@ -53,6 +53,8 @@ struct _dirdesc {
 	struct _telldir *dd_td;	/* telldir position recording */
 };
 
+#ifndef _dirfd
 #define	_dirfd(dirp)	((dirp)->dd_fd)
+#endif
 
 #endif /* !_GEN_PRIVATE_H_ */

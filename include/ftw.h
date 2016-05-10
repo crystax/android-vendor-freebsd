@@ -57,6 +57,11 @@ __BEGIN_DECLS
 int	ftw(const char *, int (*)(const char *, const struct stat *, int), int);
 int	nftw(const char *, int (*)(const char *, const struct stat *, int,
 	    struct FTW *), int, int);
+#if __ANDROID__
+int	ftw64(const char *, int (*)(const char *, const struct stat64 *, int), int);
+int	nftw64(const char *, int (*)(const char *, const struct stat64 *, int,
+	    struct FTW *), int, int);
+#endif /* __ANDROID__ */
 __END_DECLS
 
 #endif	/* !_FTW_H */
