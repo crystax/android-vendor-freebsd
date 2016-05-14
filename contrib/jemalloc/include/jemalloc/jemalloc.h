@@ -15,7 +15,9 @@ extern "C" {
 #define	JEMALLOC_VERSION_GID "0ed518e5dab789ad2171bb38977a8927e2a26775"
 
 #include "jemalloc_defs.h"
+#if !__ANDROID__
 #include "jemalloc_FreeBSD.h"
+#endif
 
 #ifdef JEMALLOC_EXPERIMENTAL
 #define	ALLOCM_LG_ALIGN(la)	(la)

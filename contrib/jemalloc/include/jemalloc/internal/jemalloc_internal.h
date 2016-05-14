@@ -72,7 +72,9 @@ typedef intptr_t ssize_t;
 #include <valgrind/memcheck.h>
 #endif
 
+#if !__ANDROID__
 #include "jemalloc/internal/private_namespace.h"
+#endif
 
 #ifdef JEMALLOC_CC_SILENCE
 #define	UNUSED JEMALLOC_ATTR(unused)

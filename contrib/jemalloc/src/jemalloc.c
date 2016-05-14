@@ -8,9 +8,11 @@ malloc_tsd_data(, arenas, arena_t *, NULL)
 malloc_tsd_data(, thread_allocated, thread_allocated_t,
     THREAD_ALLOCATED_INITIALIZER)
 
+#if !__ANDROID__
 /* Work around <http://llvm.org/bugs/show_bug.cgi?id=12623>: */
 const char	*__malloc_options_1_0 = NULL;
 __sym_compat(_malloc_options, __malloc_options_1_0, FBSD_1.0);
+#endif /* !__ANDROID__ */
 
 /* Runtime configuration options. */
 const char	*je_malloc_conf;
@@ -701,7 +703,7 @@ malloc_init_hard(void)
 	malloc_conf_init();
 
 #if (!defined(JEMALLOC_MUTEX_INIT_CB) && !defined(JEMALLOC_ZONE) \
-    && !defined(_WIN32))
+    && !defined(_WIN32) && !defined(__ANDROID__))
 	/* Register fork handlers. */
 	if (pthread_atfork(jemalloc_prefork, jemalloc_postfork_parent,
 	    jemalloc_postfork_child) != 0) {
