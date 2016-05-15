@@ -79,6 +79,10 @@ extern int __mb_cur_max;
 extern int ___mb_cur_max(void);
 #define	MB_CUR_MAX	(___mb_cur_max())
 
+#if __ANDROID__
+#include <malloc.h>
+#endif
+
 _Noreturn void	 abort(void);
 int	 abs(int) __pure2;
 int	 atexit(void (*)(void));
@@ -87,20 +91,28 @@ int	 atoi(const char *);
 long	 atol(const char *);
 void	*bsearch(const void *, const void *, size_t,
 	    size_t, int (*)(const void *, const void *));
+#if !__ANDROID__
 void	*calloc(size_t, size_t) __malloc_like;
+#endif
 div_t	 div(int, int) __pure2;
 _Noreturn void	 exit(int);
+#if !__ANDROID__
 void	 free(void *);
+#endif
 char	*getenv(const char *);
 long	 labs(long) __pure2;
 ldiv_t	 ldiv(long, long) __pure2;
+#if !__ANDROID__
 void	*malloc(size_t) __malloc_like;
+#endif
 int	 mblen(const char *, size_t);
 size_t	 mbstowcs(wchar_t * __restrict , const char * __restrict, size_t);
 int	 mbtowc(wchar_t * __restrict, const char * __restrict, size_t);
 void	 qsort(void *, size_t, size_t,
 	    int (*)(const void *, const void *));
+#if !__ANDROID__
 void	*realloc(void *, size_t);
+#endif
 double	 strtod(const char * __restrict, char ** __restrict);
 float	 strtof(const char * __restrict, char ** __restrict);
 long	 strtol(const char * __restrict, char ** __restrict, int);
@@ -168,7 +180,9 @@ char	*realpath(const char * __restrict, char * __restrict);
 int	 rand_r(unsigned *);			/* (TSF) */
 #endif
 #if __POSIX_VISIBLE >= 200112
+#if !__ANDROID__
 int	 posix_memalign(void **, size_t, size_t); /* (ADV) */
+#endif
 int	 setenv(const char *, const char *, int);
 int	 unsetenv(const char *);
 #endif
