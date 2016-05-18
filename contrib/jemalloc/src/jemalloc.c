@@ -1734,8 +1734,12 @@ je_nallocm(size_t *rsize, size_t size, int flags)
  * trigger the deadlock described above, but doing so would involve forking via
  * a library constructor that runs before jemalloc's runs.
  */
+#if __ANDROID__
+__hidden void
+#else
 JEMALLOC_ATTR(constructor)
 static void
+#endif
 jemalloc_constructor(void)
 {
 
