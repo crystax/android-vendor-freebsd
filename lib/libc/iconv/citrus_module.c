@@ -111,6 +111,17 @@
 #include "citrus_module.h"
 #include "libc_private.h"
 
+#if __ANDROID__
+
+static void *iconv_module = NULL;
+
+struct _citrus_iconv_ops;
+
+int _citrus_iconv_std_iconv_getops(struct _citrus_iconv_ops *ops);
+int _citrus_iconv_none_iconv_getops(struct _citrus_iconv_ops *ops);
+
+#else /* __ANDROID__ */
+
 static int		 _getdewey(int[], char *);
 static int		 _cmpndewey(int[], int, int[], int);
 static const char	*_findshlib(char *, int *, int *);
@@ -202,11 +213,7 @@ _findshlib(char *name, int *majorp, int *minorp)
 		while ((dp = readdir(dd)) != NULL) {
 			int n;
 
-#if __ANDROID__
-            if ((int)strlen(dp->d_name) < len + 4)
-#else
 			if (dp->d_namlen < len + 4)
-#endif
 				continue;
 			if (strncmp(dp->d_name, lname, (size_t)len) != 0)
 				continue;
@@ -261,11 +268,20 @@ _findshlib(char *name, int *majorp, int *minorp)
 
 	return (path[0] ? path : NULL);
 }
+#endif /* !__ANDROID__ */
 
 void *
 _citrus_find_getops(_citrus_module_t handle, const char *modname,
     const char *ifname)
 {
+#if __ANDROID__
+    (void)handle;
+    if (strcmp(modname, "iconv_std") == 0 && strcmp(ifname, "iconv") == 0)
+        return (void*)_citrus_iconv_std_iconv_getops;
+    if (strcmp(modname, "iconv_none") == 0 && strcmp(ifname, "iconv") == 0)
+        return (void*)_citrus_iconv_none_iconv_getops;
+    return NULL;
+#else /* !__ANDROID__ */
 	char name[PATH_MAX];
 	void *p;
 
@@ -273,11 +289,19 @@ _citrus_find_getops(_citrus_module_t handle, const char *modname,
 	    modname, ifname);
 	p = dlsym((void *)handle, name);
 	return (p);
+#endif /* !__ANDROID__ */
 }
 
 int
 _citrus_load_module(_citrus_module_t *rhandle, const char *encname)
 {
+#if __ANDROID__
+    if (strcmp(encname, "iconv_std") == 0 || strcmp(encname, "iconv_none") == 0) {
+        *rhandle = (_citrus_module_t)&iconv_module;
+        return 0;
+    }
+    return EINVAL;
+#else /* !__ANDROID__ */
 	const char *p;
 	char path[PATH_MAX];
 	void *handle;
@@ -308,12 +332,17 @@ _citrus_load_module(_citrus_module_t *rhandle, const char *encname)
 	*rhandle = (_citrus_module_t)handle;
 
 	return (0);
+#endif /* !__ANDROID__ */
 }
 
 void
 _citrus_unload_module(_citrus_module_t handle)
 {
 
+#if __ANDROID__
+    (void)handle;
+#else /* !__ANDROID__ */
 	if (handle)
 		dlclose((void *)handle);
+#endif /* !__ANDROID__ */
 }
