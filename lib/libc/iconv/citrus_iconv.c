@@ -68,7 +68,7 @@ static int			 shared_max_reuse, shared_num_unused;
 static _CITRUS_HASH_HEAD(, _citrus_iconv_shared, CI_HASH_SIZE) shared_pool;
 static TAILQ_HEAD(, _citrus_iconv_shared) shared_unused;
 
-static pthread_mutex_t		 ci_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_rwlock_t		 ci_lock = PTHREAD_RWLOCK_INITIALIZER;
 
 static __inline void
 init_cache(void)
