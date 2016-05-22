@@ -133,7 +133,7 @@ struct tm {
 	int	tm_yday;	/* days since January 1 [0-365] */
 	int	tm_isdst;	/* Daylight Savings Time flag */
 	long	tm_gmtoff;	/* offset from UTC in seconds */
-	char	*tm_zone;	/* timezone abbreviation */
+	const char	*tm_zone;	/* timezone abbreviation */
 };
 
 #if __POSIX_VISIBLE
