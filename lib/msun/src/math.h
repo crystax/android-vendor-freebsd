@@ -233,6 +233,12 @@ int	isinf(double);
 int	isnan(double);
 #endif
 
+#if __ANDROID__
+int __isnanf(float);
+int __isnan(double);
+int __isnanl(long double);
+#endif /* __ANDROID__ */
+
 double	acos(double);
 double	asin(double);
 double	atan(double);
@@ -339,6 +345,9 @@ double	lgamma_r(double, int *);
  * IEEE Test Vector
  */
 double	significand(double);
+#if __ANDROID__
+long double significandl(long double);
+#endif /* __ANDROID__ */
 #endif /* __BSD_VISIBLE */
 
 /* float versions of ANSI/POSIX functions */
