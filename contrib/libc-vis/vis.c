@@ -659,7 +659,7 @@ strvis(char *mbdst, const char *mbsrc, int flags)
 }
 
 int
-strnvis(char *mbdst, size_t dlen, const char *mbsrc, int flags)
+strnvis(char *mbdst, const char *mbsrc, size_t dlen, int flags)
 {
 	return istrsenvisxl(mbdst, &dlen, mbsrc, flags, "", NULL);
 }

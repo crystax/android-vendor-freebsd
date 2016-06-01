@@ -89,7 +89,7 @@ char	*svis(char *, int, int, int, const char *);
 char	*snvis(char *, size_t, int, int, int, const char *);
 
 int	strvis(char *, const char *, int);
-int	strnvis(char *, size_t, const char *, int);
+int	strnvis(char *, const char *, size_t, int);
 
 int	strsvis(char *, const char *, int, const char *);
 int	strsnvis(char *, size_t, const char *, int, const char *);
