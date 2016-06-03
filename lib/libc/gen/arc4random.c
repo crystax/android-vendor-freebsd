@@ -61,6 +61,9 @@ struct arc4_stream {
 static pthread_mutex_t	arc4random_mtx = PTHREAD_MUTEX_INITIALIZER;
 
 #define	RANDOMDEV	"/dev/random"
+#if __ANDROID__
+#define	URANDOMDEV	"/dev/urandom"
+#endif
 #define	KEYSIZE		128
 #define	_ARC4_LOCK()						\
 	do {							\
@@ -152,6 +155,16 @@ arc4_stir(void)
 	done = 0;
 	if (arc4_sysctl((u_char *)&rdat, KEYSIZE) == KEYSIZE)
 		done = 1;
+#if defined(URANDOMDEV)
+	if (!done) {
+		fd = _open(URANDOMDEV, O_RDONLY | O_CLOEXEC, 0);
+		if (fd >= 0) {
+			if (_read(fd, &rdat, KEYSIZE) == KEYSIZE)
+				done = 1;
+			(void)_close(fd);
+		}
+	}
+#endif
 	if (!done) {
 		fd = _open(RANDOMDEV, O_RDONLY | O_CLOEXEC, 0);
 		if (fd >= 0) {
