@@ -65,6 +65,12 @@ _RuneLocale	*__runes_for_locale(locale_t, int*);
 #define _XLOCALE_INLINE inline
 #endif
 #endif
+
+#ifdef __ANDROID__
+#undef  _XLOCALE_INLINE
+#define _XLOCALE_INLINE static __inline
+#endif
+
 #endif /* _XLOCALE_INLINE */
 
 #ifdef _XLOCALE_WCTYPES
