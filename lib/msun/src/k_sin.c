@@ -68,3 +68,7 @@ __kernel_sin(double x, double y, int iy)
 	if(iy==0) return x+v*(S1+z*r);
 	else      return x-((z*(half*y-v*r)-y)-v*S1);
 }
+
+#if (LDBL_MANT_DIG == 53)
+__weak_reference(__kernel_sin, __kernel_sinl);
+#endif

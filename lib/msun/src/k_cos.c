@@ -77,3 +77,7 @@ __kernel_cos(double x, double y)
 	w  = one-hz;
 	return w + (((one-w)-hz) + (z*r-x*y));
 }
+
+#if (LDBL_MANT_DIG == 53)
+__weak_reference(__kernel_cos, __kernel_cosl);
+#endif
